@@ -1,1 +1,1 @@
-HelloWorld
+shutdown /s
