@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "KidPlayer.generated.h"
 
+
+class AProjectile;
 UCLASS()
 class GAMEJAM2019_API AKidPlayer : public ACharacter
 {
@@ -31,5 +33,9 @@ public:
 	void MoveRight(float Value);
 
 	void OnFire();
+
+private:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> ProjectileClass;
 	
 };
