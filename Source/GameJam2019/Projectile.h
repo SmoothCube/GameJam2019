@@ -23,4 +23,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere)
+	class USphereComponent* CollisionSphere = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* Mesh = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UProjectileMovementComponent* ProjectileMovement;
+
 };
