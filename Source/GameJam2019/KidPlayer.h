@@ -33,8 +33,13 @@ public:
 	void MoveRight(float Value);
 
 	void OnFire();
+	void Sprint();
+
+
 
 private:
+
+	bool bIsSprinting = false;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
 	

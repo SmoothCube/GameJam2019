@@ -2,6 +2,7 @@
 
 #include "KidPlayer.h"
 #include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 
 #include "Projectile.h"
@@ -35,6 +36,8 @@ void AKidPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AKidPlayer::OnFire);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AKidPlayer::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AKidPlayer::Sprint);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AKidPlayer::MoveForward);
@@ -81,4 +84,14 @@ void AKidPlayer::OnFire()
 
 		}
 	}
+}
+
+void AKidPlayer::Sprint()
+{
+	bIsSprinting = !bIsSprinting;
+	if (bIsSprinting)
+		GetCharacterMovement()->MaxWalkSpeed = 1200;
+	else
+		GetCharacterMovement()->MaxWalkSpeed = 600;
+
 }
