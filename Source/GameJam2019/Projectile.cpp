@@ -29,7 +29,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::BeginOverlap);
 }
 
 // Called every frame
@@ -37,5 +37,14 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectile::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Projectile] Begin overlap:"))
+
+	}
 }
 
