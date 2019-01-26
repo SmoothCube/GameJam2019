@@ -47,7 +47,7 @@ void AProjectile::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[Projectile] Begin overlap: Test Fine!"))
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 2.0f, GetActorLocation());
-		Destroy();
 	}
+	Destroy();
 }
 
