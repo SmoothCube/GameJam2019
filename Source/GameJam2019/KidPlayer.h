@@ -20,8 +20,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere)
-		class USkeletalMeshComponent * Arm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class USkeletalMeshComponent * Arm;
 
 
 protected:
@@ -49,6 +49,8 @@ public:
 private:
 	bool bIsSprinting = false;
 	bool bFirstShot = false;
+	bool bGunPickedUp = false;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
 	UPROPERTY(EditAnywhere)
@@ -56,4 +58,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	UAnimationAsset* FirstShootAnim = nullptr;
 
+	UFUNCTION()
+		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult &SweepResult);
 };

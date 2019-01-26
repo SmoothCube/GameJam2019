@@ -4,12 +4,14 @@
 #include "Components/InputComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 
 #include "DogEnemy.h"
 #include "Projectile.h"
+#include "Treestump.h"
 
 // Sets default values
 AKidPlayer::AKidPlayer()
@@ -29,6 +31,7 @@ AKidPlayer::AKidPlayer()
 void AKidPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AKidPlayer::BeginOverlap);
 }
 	
 // Called every frame
@@ -73,39 +76,35 @@ void AKidPlayer::MoveRight(float Value)
 
 void AKidPlayer::OnFire()
 {
-	/* needs to be uncommented when the animation is ready
-	if (bFirstShot)
+
+	if (bGunPickedUp)
 	{
-		if(FirstShootAnim)
+
+		// try and fire a projectile
+		if (ProjectileClass != NULL)
 		{
-			Arm->PlayAnimation(FirstShootAnim, false);
-			bFirstShot = false;
+			if(ShootAnim)
+			{
+				Arm->PlayAnimation(ShootAnim, false);
+			}
+			UWorld* const World = GetWorld();
+			if (World != NULL)
+			{
+				const FRotator SpawnRotation = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocation(MuzzleLocation);// = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+				//Set Spawn Collision Handling Override
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				// spawn the projectile at the muzzle
+				World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+			}
 		}
 	}
-	*/
-	// try and fire a projectile
-	if (ProjectileClass != NULL)
-	{
-		if(ShootAnim)
-		{
-			Arm->PlayAnimation(ShootAnim, false);
-		}
-		UWorld* const World = GetWorld();
-		if (World != NULL)
-		{
-			const FRotator SpawnRotation = GetControlRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation(MuzzleLocation);// = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			// spawn the projectile at the muzzle
-			World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
-		}
-	}
 }
 
 void AKidPlayer::Sprint()
@@ -116,6 +115,19 @@ void AKidPlayer::Sprint()
 	else
 		GetCharacterMovement()->MaxWalkSpeed = 600;
 
+}
+
+void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[AKidPlayer] BeginOverlap: Runs"))
+	if (bGunPickedUp == false && OtherActor->IsA(ATreestump::StaticClass()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[AKidPlayer] BeginOverlap: Found treestub"))
+		Arm->SetVisibility(true,true);
+		Arm->Activate();
+		Arm->PlayAnimation(FirstShootAnim, false);
+		bGunPickedUp = true;
+	}
 }
 
 
