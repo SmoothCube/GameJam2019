@@ -3,8 +3,10 @@
 #include "KidPlayer.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 
+#include "DogEnemy.h"
 #include "Projectile.h"
 
 // Sets default values
@@ -19,7 +21,7 @@ AKidPlayer::AKidPlayer()
 void AKidPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AKidPlayer::BeginOverlap);
 }
 
 // Called every frame
@@ -94,3 +96,17 @@ void AKidPlayer::Sprint()
 		GetCharacterMovement()->MaxWalkSpeed = 600;
 
 }
+
+void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (Cast<ADogEnemy>(OtherActor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
+		//GetMovementComponent()->AddRadialForce();
+		GetMovementComponent()->AddRadialImpulse(OtherActor->GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant,true);
+		Health--;
+		if (Health <= 0)
+			Destroy();
+	}
+}
+

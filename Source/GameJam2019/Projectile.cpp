@@ -15,6 +15,8 @@ AProjectile::AProjectile()
 	RootComponent = CollisionSphere;
 	Mesh->SetupAttachment(RootComponent);
 
+	InitialLifeSpan = 1.0f;
+
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionSphere;
 	ProjectileMovement->InitialSpeed = (3000.f);
