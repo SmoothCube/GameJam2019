@@ -105,6 +105,7 @@ void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor 
 		//GetMovementComponent()->AddRadialForce();
 		GetMovementComponent()->AddRadialImpulse(OtherActor->GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant,true);
 		Health--;
+
 		if (Health <= 0)
 			Destroy();
 	}

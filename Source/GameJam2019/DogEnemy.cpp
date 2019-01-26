@@ -60,9 +60,12 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
 	if (Cast<AProjectile>(OtherActor))
 	{
+		SpawnBloodParticle(OtherActor->GetActorLocation());
+
 		Health -= 10;
 		if (Health <= 0)
 			Destroy();
+
 	}
 }
 

@@ -65,6 +65,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		float CloseEnoughToPlayer = 40.f;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void SpawnBloodParticle(FVector Location);
 
 private:
 
