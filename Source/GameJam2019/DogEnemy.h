@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "DogEnemy.generated.h"
 
+class AKidPlayer;
+class AEnemyController;
+
 UCLASS()
 class GAMEJAM2019_API ADogEnemy : public ACharacter
 {
@@ -24,7 +27,7 @@ protected:
 	void OnFire();
 
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,6 +42,32 @@ public:
 			const FHitResult &SweepResult);
 
 
+	UPROPERTY(VisibleAnywhere)
+		class USphereComponent* LookForPlayerComponent;
+
+	UFUNCTION()
+		void BeginTraceOverlap(UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult &SweepResult);
+
+	UPROPERTY(EditAnywhere)
+		float LookForPlayerRadius = 5000.f;
+
+	UPROPERTY(EditAnywhere)
+		float CloseEnoughToPlayer = 40.f;
+
+
 private:
+
+	FVector LastPlayerLocation;
+	FVector HomeLocation;
+	AKidPlayer* Player;
+	AEnemyController* EC;
+
+
+	bool bCanSeePlayer = false;
 	int Health = 100;
 };

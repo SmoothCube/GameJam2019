@@ -3,13 +3,19 @@
 #include "DogEnemy.h"
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "KidPlayer.h"
+#include "EnemyController.h"
+#include "Components/SphereComponent.h"
 #include "Projectile.h"
 
 // Sets default values
 ADogEnemy::ADogEnemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	LookForPlayerComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Look For Player"));
+	LookForPlayerComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -18,7 +24,11 @@ void ADogEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginOverlap);
+	LookForPlayerComponent->SetSphereRadius(LookForPlayerRadius);
+	LookForPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginTraceOverlap);
 
+	HomeLocation = GetActorLocation();
+	EC = Cast<AEnemyController>(GetController());
 }
 
 // Called every frame
@@ -26,6 +36,12 @@ void ADogEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	if (bCanSeePlayer)
+	{
+		LastPlayerLocation = Player->GetActorLocation();
+		EC->MoveToLocation(LastPlayerLocation, CloseEnoughToPlayer, true, true);
+	}
 }
 
 // Called to bind functionality to input
@@ -37,12 +53,23 @@ void ADogEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping!"));
+	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
 	if (Cast<AProjectile>(OtherActor))
 	{
-		Health-=10;
-		if(Health <= 0)
+		Health -= 10;
+		if (Health <= 0)
 			Destroy();
+	}
+}
+
+void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Overlapping!"));
+	Player = Cast<AKidPlayer>(OtherActor);
+	
+	if (Player) {
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
+		bCanSeePlayer = true;
 	}
 }
 
