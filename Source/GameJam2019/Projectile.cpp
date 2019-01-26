@@ -22,7 +22,7 @@ AProjectile::AProjectile()
 	ProjectileMovement->InitialSpeed = (3000.f);
 	ProjectileMovement->MaxSpeed = 100000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->bShouldBounce = false;
 }
 
 // Called when the game starts or when spawned
@@ -41,10 +41,13 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	UE_LOG(LogTemp, Warning, TEXT("[Projectile] Begin overlap:"))
+
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Projectile] Begin overlap:"))
-
+		UE_LOG(LogTemp, Warning, TEXT("[Projectile] Begin overlap: Test Fine!"))
+		OtherComp->AddImpulseAtLocation(GetVelocity() * 2.0f, GetActorLocation());
+		Destroy();
 	}
 }
 
