@@ -4,6 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "KidPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EnemyController.h"
 #include "Components/SphereComponent.h"
 #include "Projectile.h"
@@ -67,13 +68,24 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 			Destroy();
 
 	}
+	Player = (Cast<AKidPlayer>)(OtherActor);
+	if (Player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
+		//GetMovementComponent()->AddRadialForce();
+		Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
+		Player->Health--;
+
+		if (Player->Health <= 0)
+			Player->Destroy();
+	}
 }
 
 void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Overlapping!"));
 	Player = Cast<AKidPlayer>(OtherActor);
-	
+
 	if (Player) {
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
 		bCanSeePlayer = true;
