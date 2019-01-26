@@ -45,11 +45,18 @@ public:
 	int Health = 3;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bUsingStickGun = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool bGunPickedUp = false;
+
+	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);
 private:
 	bool bIsSprinting = false;
 	bool bFirstShot = false;
-	bool bGunPickedUp = false;
+
+
+
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
