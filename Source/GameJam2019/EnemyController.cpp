@@ -30,7 +30,7 @@ void AEnemyController::Tick(float DeltaTime)
 	 FVector SweepEnd = GetPawn()->GetActorLocation();
 
 	 // create a collision sphere
-	 FCollisionShape MyColSphere = FCollisionShape::MakeSphere(500.0f);
+	 FCollisionShape MyColSphere = FCollisionShape::MakeSphere(1000.f);
 
 	 // draw collision sphere
 	 DrawDebugSphere(GetWorld(), GetPawn()->GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Purple, true);
@@ -47,6 +47,9 @@ void AEnemyController::Tick(float DeltaTime)
 			 Player = Cast<AKidPlayer>(Hit.Actor);
 			 if (Player)
 			 {
+				 LastPlayerLocation = Player->GetActorLocation();
+				 MoveToLocation(LastPlayerLocation, 600.f, true, true);
+
 				 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Hit Result: %s"), *Player->GetName()));
 
 			 }
