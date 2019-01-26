@@ -17,6 +17,16 @@ public:
 	// Sets default values for this character's properties
 	AKidPlayer();
 
+	UPROPERTY(VisibleAnywhere)
+		class UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere)
+		class USkeletalMeshComponent * Arm;
+
+	UPROPERTY(VisibleAnywhere)
+		class UStaticMeshComponent* Gun;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,7 +39,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void MoveForward(float Value);
-
+	
 	void MoveRight(float Value);
 
 	void OnFire();

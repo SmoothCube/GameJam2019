@@ -2,6 +2,9 @@
 
 #include "KidPlayer.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 
@@ -14,6 +17,16 @@ AKidPlayer::AKidPlayer()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	FName weaponSocketName = TEXT("PLACE_GUN_HERE_JNTSocket");
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(RootComponent);
+	Arm = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Arm"));
+	Arm->SetupAttachment(Camera);
+	Gun = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gun"));
+	Gun->AttachToComponent(Arm, FAttachmentTransformRules::SnapToTargetNotIncludingScale, weaponSocketName);
+
+	//Gun->AttachRootComponentTo(GetMesh(), FName(TEXT("PLACE_GUN_HERE_JNTSocket")), EAttachLocation::SnapToTarget);
 }
 
 // Called when the game starts or when spawned
