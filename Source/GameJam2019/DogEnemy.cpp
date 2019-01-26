@@ -42,7 +42,7 @@ void ADogEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	if (bCanSeePlayer)
+	if (bCanSeePlayer && bIsFighting)
 	{
 		LastPlayerLocation = Player->GetActorLocation();
 		EC->MoveToLocation(LastPlayerLocation, CloseEnoughToPlayer, true, true);
@@ -58,51 +58,58 @@ void ADogEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
-	if (Cast<AProjectile>(OtherActor))
+	if (bIsFighting)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
 
-		SpawnBloodParticle(OtherActor->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
+		if (Cast<AProjectile>(OtherActor))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
 
-		Health -= 10;
-		if (Health <= 0)
-			Destroy();
+			SpawnBloodParticle(OtherActor->GetActorLocation());
 
-	}
-	else 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Before Cast!"));
-		Player = (Cast<AKidPlayer>)(OtherActor);
-		if (Player)
-		{ 
-	
-			UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
-			//GetMovementComponent()->AddRadialForce();
-			Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
-			Player->Health--;
-
-			if (Player->Health <= 0)
-				Player->Destroy();
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Cast failed!"));
+			Health -= 10;
+			if (Health <= 0 && bFirstDeath)
+			{
+				ChangeMesh();
+				bFirstDeath = false;
+				bIsFighting = false;
+			}
 
 		}
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: After playercheck in else"));
+		else 
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Before Cast!"));
+			Player = (Cast<AKidPlayer>)(OtherActor);
+			if (Player)
+			{ 
+				UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
+				Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
+				Player->Health--;
+
+				if (Player->Health <= 0)
+					Player->Destroy();
+			}
+		}
 	}
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: End"));
 }
 
 void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	
+
 	
 	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Overlapping!"));
 	Player = Cast<AKidPlayer>(OtherActor);
 
 	if (Player) {
+
+		if (bFirstTimeSeePlayer)
+		{
+			bFirstTimeSeePlayer = false;
+			ChangeMesh();
+		}
+
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
 		bCanSeePlayer = true;
 	}

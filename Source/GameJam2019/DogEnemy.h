@@ -59,6 +59,9 @@ public:
 			UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ChangeMesh();
+
 	UPROPERTY(EditAnywhere)
 		float LookForPlayerRadius = 5000.f;
 
@@ -75,7 +78,9 @@ private:
 	AKidPlayer* Player;
 	AEnemyController* EC;
 
-
+	bool bFirstTimeSeePlayer = true;
+	bool bIsFighting = true;
+	bool bFirstDeath = true;
 	bool bCanSeePlayer = false;
 	int Health = 100;
 };
