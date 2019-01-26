@@ -66,7 +66,7 @@ public:
 		float LookForPlayerRadius = 5000.f;
 
 	UPROPERTY(EditAnywhere)
-		float CloseEnoughToPlayer = 40.f;
+		float CloseEnoughToPlayer = 500.f;
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void SpawnBloodParticle(FVector Location);
