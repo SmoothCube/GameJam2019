@@ -53,6 +53,12 @@ public:
 			bool bFromSweep,
 			const FHitResult &SweepResult);
 
+	UFUNCTION()
+		void EndTraceOverlap(UPrimitiveComponent * OverlappedComponent,
+			AActor * OtherActor,
+			UPrimitiveComponent * OtherComp,
+			int32 OtherBodyIndex);
+
 	UPROPERTY(EditAnywhere)
 		float LookForPlayerRadius = 5000.f;
 

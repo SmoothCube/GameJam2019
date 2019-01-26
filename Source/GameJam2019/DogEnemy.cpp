@@ -24,8 +24,12 @@ void ADogEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginOverlap);
+
+
 	LookForPlayerComponent->SetSphereRadius(LookForPlayerRadius);
 	LookForPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginTraceOverlap);
+	LookForPlayerComponent->OnComponentEndOverlap.AddDynamic(this, &ADogEnemy::EndTraceOverlap);
+
 
 	HomeLocation = GetActorLocation();
 	EC = Cast<AEnemyController>(GetController());
@@ -69,6 +73,17 @@ void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 	
 	if (Player) {
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
+		bCanSeePlayer = true;
+	}
+}
+
+void ADogEnemy::EndTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] EndTraceOverlap: Overlapping!"));
+	Player = Cast<AKidPlayer>(OtherActor);
+
+	if (Player) {
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] EndTraceOverlap: Lost Player!"));
 		bCanSeePlayer = true;
 	}
 }
