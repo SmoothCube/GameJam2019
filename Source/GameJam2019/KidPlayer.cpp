@@ -124,8 +124,8 @@ void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[AKidPlayer] BeginOverlap: Found treestub"))
 		Arm->SetVisibility(true,true);
-		Arm->Activate();
-		Arm->PlayAnimation(FirstShootAnim, false);
+		//Arm->Activate();
+		//Arm->PlayAnimation(FirstShootAnim, false);
 		bGunPickedUp = true;
 	}
 }
