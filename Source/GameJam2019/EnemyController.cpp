@@ -40,13 +40,19 @@ void AEnemyController::Tick(float DeltaTime)
 
 	 if (isHit)
 	 {
+	
 		 // loop through TArray
 		 for (auto& Hit : OutHits)
 		 {
+			 Player = Cast<AKidPlayer>(Hit.Actor);
+			 if (Player)
+			 {
+				 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Hit Result: %s"), *Player->GetName()));
+
+			 }
 			 if (GEngine)
 			 {
 				 // screen log information on what was hit
-				 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Hit Result: %s"), *Hit.Actor->GetName()));
 				 // uncommnet to see more info on sweeped actor
 				 // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("All Hit Information: %s"), *Hit.ToString()));
 			 }

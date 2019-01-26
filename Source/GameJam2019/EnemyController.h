@@ -22,7 +22,7 @@ private:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
-	TSubclassOf<AKidPlayer> Player;
+	AKidPlayer* Player;
 	FVector LastPlayerLocation;
 	FVector HomeLocation;
 
