@@ -23,9 +23,6 @@ AKidPlayer::AKidPlayer()
 	Camera->SetupAttachment(RootComponent);
 	Arm = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Arm"));
 	Arm->SetupAttachment(Camera);
-	Gun = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gun"));
-	Gun->SetupAttachment(Arm, weaponSocketName);
-
 }
 
 // Called when the game starts or when spawned
@@ -33,12 +30,12 @@ void AKidPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
+	
 // Called every frame
 void AKidPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 // Called to bind functionality to input
@@ -76,15 +73,29 @@ void AKidPlayer::MoveRight(float Value)
 
 void AKidPlayer::OnFire()
 {
+	/* needs to be uncommented when the animation is ready
+	if (bFirstShot)
+	{
+		if(FirstShootAnim)
+		{
+			Arm->PlayAnimation(FirstShootAnim, false);
+			bFirstShot = false;
+		}
+	}
+	*/
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
+		if(ShootAnim)
+		{
+			Arm->PlayAnimation(ShootAnim, false);
+		}
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
 			const FRotator SpawnRotation = GetControlRotation();
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation(GetActorLocation()+(GetActorForwardVector()*100)+ FVector(0,0,50));// = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+			const FVector SpawnLocation(MuzzleLocation);// = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;

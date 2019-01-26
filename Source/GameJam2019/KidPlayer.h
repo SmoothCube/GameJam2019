@@ -23,9 +23,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class USkeletalMeshComponent * Arm;
 
-	UPROPERTY(VisibleAnywhere)
-		class UStaticMeshComponent* Gun;
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -45,13 +42,18 @@ public:
 	void OnFire();
 	void Sprint();
 
-
 	int Health = 3;
 
+	UPROPERTY(BlueprintReadWrite)
+	FVector MuzzleLocation = FVector(0, 0, 0);
 private:
-
 	bool bIsSprinting = false;
+	bool bFirstShot = false;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
+	UPROPERTY(EditAnywhere)
+	UAnimationAsset* ShootAnim = nullptr;
+	UPROPERTY(EditAnywhere)
+	UAnimationAsset* FirstShootAnim = nullptr;
 
 };
