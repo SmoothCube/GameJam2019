@@ -24,9 +24,8 @@ AKidPlayer::AKidPlayer()
 	Arm = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Arm"));
 	Arm->SetupAttachment(Camera);
 	Gun = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gun"));
-	Gun->AttachToComponent(Arm, FAttachmentTransformRules::SnapToTargetNotIncludingScale, weaponSocketName);
+	Gun->SetupAttachment(Arm, weaponSocketName);
 
-	//Gun->AttachRootComponentTo(GetMesh(), FName(TEXT("PLACE_GUN_HERE_JNTSocket")), EAttachLocation::SnapToTarget);
 }
 
 // Called when the game starts or when spawned
