@@ -62,6 +62,8 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
 	if (Cast<AProjectile>(OtherActor))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
+
 		SpawnBloodParticle(OtherActor->GetActorLocation());
 
 		Health -= 10;
@@ -71,6 +73,7 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 	}
 	else 
 	{
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Before Cast!"));
 		Player = (Cast<AKidPlayer>)(OtherActor);
 		if (Player)
 		{ 
@@ -83,7 +86,13 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 			if (Player->Health <= 0)
 				Player->Destroy();
 		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Cast failed!"));
+
+		}
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: After playercheck in else"));
 	}
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: End"));
 }
 
 void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
