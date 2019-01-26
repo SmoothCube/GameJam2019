@@ -86,6 +86,7 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 				UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
 				Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
 				Player->Health--;
+				bAttack = true;
 
 				if (Player->Health <= 0)
 					Player->Destroy();

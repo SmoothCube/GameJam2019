@@ -71,6 +71,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void SpawnBloodParticle(FVector Location);
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bAttack = false;
+
 private:
 
 	FVector LastPlayerLocation;
