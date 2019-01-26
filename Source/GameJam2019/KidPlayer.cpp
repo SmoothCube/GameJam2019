@@ -64,7 +64,6 @@ void AKidPlayer::MoveRight(float Value)
 
 void AKidPlayer::OnFire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Shoots!"));
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{

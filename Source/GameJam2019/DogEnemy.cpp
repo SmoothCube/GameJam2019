@@ -2,6 +2,8 @@
 
 #include "DogEnemy.h"
 #include "Components/InputComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Projectile.h"
 
 // Sets default values
 ADogEnemy::ADogEnemy()
@@ -15,7 +17,8 @@ ADogEnemy::ADogEnemy()
 void ADogEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginOverlap);
+
 }
 
 // Called every frame
@@ -30,6 +33,17 @@ void ADogEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping!"));
+	if (Cast<AProjectile>(OtherActor))
+	{
+		Health-=10;
+		if(Health <= 0)
+			Destroy();
+	}
 }
 
 void ADogEnemy::MoveForward(float Value)
