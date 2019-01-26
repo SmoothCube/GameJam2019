@@ -33,6 +33,13 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION()
+		void BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void KnockBack();
+
 	UFUNCTION()
 		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 			AActor* OtherActor,
@@ -41,9 +48,12 @@ public:
 			bool bFromSweep,
 			const FHitResult &SweepResult);
 
+	UPROPERTY(VisibleAnywhere)
+		class UCapsuleComponent* AttackPlayerComponent;
 
 	UPROPERTY(VisibleAnywhere)
 		class USphereComponent* LookForPlayerComponent;
+
 
 	UFUNCTION()
 		void BeginTraceOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -60,19 +70,19 @@ public:
 			int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void ChangeMesh();
+		void ChangeMesh();
 
 	UPROPERTY(EditAnywhere)
 		float LookForPlayerRadius = 5000.f;
 
 	UPROPERTY(EditAnywhere)
-		float CloseEnoughToPlayer = 500.f;
+		float CloseEnoughToPlayer = 100.f;
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void SpawnBloodParticle(FVector Location);
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bAttack = false;
+		bool bAttack = false;
 
 private:
 

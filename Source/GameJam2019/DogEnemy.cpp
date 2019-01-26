@@ -15,6 +15,9 @@ ADogEnemy::ADogEnemy()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	AttackPlayerComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Player Close Attack"));
+	AttackPlayerComponent->SetupAttachment(RootComponent);
+
 	LookForPlayerComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Look For Player"));
 	LookForPlayerComponent->SetupAttachment(RootComponent);
 
@@ -30,6 +33,8 @@ void ADogEnemy::BeginPlay()
 	LookForPlayerComponent->SetSphereRadius(LookForPlayerRadius);
 	LookForPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginTraceOverlap);
 	LookForPlayerComponent->OnComponentEndOverlap.AddDynamic(this, &ADogEnemy::EndTraceOverlap);
+
+	AttackPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginOverlapAttack);
 
 
 	HomeLocation = GetActorLocation();
@@ -53,14 +58,39 @@ void ADogEnemy::Tick(float DeltaTime)
 void ADogEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
 
 }
+void ADogEnemy::BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (bIsFighting)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlapAttack: Before Cast!"));
+		Player = (Cast<AKidPlayer>)(OtherActor);
+		if (Player)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlapAttack: Found Player!"));
+			Player->Health--;
+			bAttack = true;
 
+			if (Player->Health <= 0)
+				Player->Destroy();
+		}
+	}
+}
+
+void ADogEnemy::KnockBack()
+{
+	if (Player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] KnockBack: Found Player!"));
+		Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
+	}
+}
 void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (bIsFighting)
 	{
-
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
 		if (Cast<AProjectile>(OtherActor))
 		{
@@ -75,31 +105,12 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 				bFirstDeath = false;
 				bIsFighting = false;
 			}
-
-		}
-		else 
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Before Cast!"));
-			Player = (Cast<AKidPlayer>)(OtherActor);
-			if (Player)
-			{ 
-				UE_LOG(LogTemp, Warning, TEXT("Player Overlapping dog!"));
-				Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
-				Player->Health--;
-				bAttack = true;
-
-				if (Player->Health <= 0)
-					Player->Destroy();
-			}
 		}
 	}
 }
 
 void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	
-
-	
 	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Overlapping!"));
 	Player = Cast<AKidPlayer>(OtherActor);
 
@@ -114,7 +125,7 @@ void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
 		bCanSeePlayer = true;
 	}
-	
+
 }
 
 void ADogEnemy::EndTraceOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
