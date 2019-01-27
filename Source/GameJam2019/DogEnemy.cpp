@@ -143,7 +143,7 @@ void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 		{
 			bFirstTimeSeePlayer = false;
 			ChangeMesh();
-			LookForPlayerRadius = 6000.f;
+			LookForPlayerRadius = 3000.f;
 			LookForPlayerComponent->SetSphereRadius(LookForPlayerRadius);
 
 		}
