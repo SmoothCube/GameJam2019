@@ -50,7 +50,10 @@ void ADogEnemy::Tick(float DeltaTime)
 	if (bCanSeePlayer && bIsFighting)
 	{
 		LastPlayerLocation = Player->GetActorLocation();
+		if (bCanWalk) {
+
 		EC->MoveToLocation(LastPlayerLocation, CloseEnoughToPlayer, true, true);
+		}
 	}
 }
 
@@ -58,8 +61,6 @@ void ADogEnemy::Tick(float DeltaTime)
 void ADogEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-
 }
 void ADogEnemy::BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
@@ -70,21 +71,35 @@ void ADogEnemy::BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AA
 		if (Player)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlapAttack: Found Player!"));
-			Player->Health--;
 			bAttack = true;
-
+		}
+	}
+}
+void ADogEnemy::DealDamage()
+{
+	if (bAttack)
+	{
+		if (Player)
+		{
+			Player->Health--;
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] DealDamage: AUUUU"));
 			if (Player->Health <= 0)
+			{
 				Player->Destroy();
+			}
 		}
 	}
 }
 
 void ADogEnemy::KnockBack()
 {
-	if (Player)
+	if (bAttack)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] KnockBack: Found Player!"));
-		Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
+		if (Player)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] KnockBack: Found Player!"));
+			Player->GetMovementComponent()->AddRadialImpulse(GetActorLocation(), 500, 20000, ERadialImpulseFalloff::RIF_Constant, true);
+		}
 	}
 }
 void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

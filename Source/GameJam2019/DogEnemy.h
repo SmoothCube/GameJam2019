@@ -38,6 +38,9 @@ public:
 		void BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	UFUNCTION(BlueprintCallable)
+	void DealDamage();
+
+	UFUNCTION(BlueprintCallable)
 	void KnockBack();
 
 	UFUNCTION()
@@ -83,6 +86,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 		bool bAttack = false;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool bCanWalk = false;
 
 private:
 

@@ -46,10 +46,14 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bGunPickedUp = false;
+
+
 private:
 	bool bIsSprinting = false;
 	bool bFirstShot = false;
-	bool bGunPickedUp = false;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
