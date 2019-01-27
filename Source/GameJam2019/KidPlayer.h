@@ -42,6 +42,7 @@ public:
 	void OnFire();
 	void Sprint();
 
+	UPROPERTY(BlueprintReadWrite)
 	int Health = 3;
 
 	UPROPERTY(BlueprintReadWrite)
