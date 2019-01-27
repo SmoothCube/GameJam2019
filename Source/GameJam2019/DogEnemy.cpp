@@ -84,7 +84,7 @@ void ADogEnemy::DealDamage()
 	{
 		if (Player)
 		{
-			Player->Health--;
+			Player->RecieveDamage(1);
 			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] DealDamage: AUUUU"));
 			if (Player->Health <= 0)
 			{
