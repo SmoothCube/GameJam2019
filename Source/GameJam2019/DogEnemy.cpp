@@ -7,6 +7,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnemyController.h"
 #include "Components/SphereComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 #include "Projectile.h"
 
 // Sets default values
@@ -116,7 +119,12 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 			Health -= 10;
 			if (Health <= 0 && bFirstDeath)
 			{
-				ChangeMesh();
+				FTransform SpawnTransform = FTransform(FRotator(0, 0, 0), GetActorLocation() + FVector(0, 0, -50), FVector(1, 1, 1));
+				if (DeathParticle)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathParticle, GetActorLocation(), GetActorRotation());
+				}
+				Destroy();
 				bFirstDeath = false;
 				bIsFighting = false;
 			}

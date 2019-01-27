@@ -57,6 +57,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class USphereComponent* LookForPlayerComponent;
 
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* DeathParticle;
 
 	UFUNCTION()
 		void BeginTraceOverlap(UPrimitiveComponent* OverlappedComponent,
