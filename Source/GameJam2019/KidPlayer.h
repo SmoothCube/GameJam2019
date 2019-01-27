@@ -54,8 +54,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bGunPickedUp = false;
 
 
 private:
