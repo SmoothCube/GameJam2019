@@ -13,12 +13,5 @@ UCLASS()
 class GAMEJAM2019_API ASpawnPoint : public ATargetPoint
 {
 	GENERATED_BODY()
-		ASpawnPoint();
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	void SpawnActor();
-	bool firstSpawn = false;
-	UPROPERTY(EditAnywhere)
-	UClass* ActorToSpawn = nullptr;
 	
 };
