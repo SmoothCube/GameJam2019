@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DogEnemy.h"
 #include "Projectile.h"
@@ -85,6 +86,7 @@ void AKidPlayer::OnFire()
 			UWorld* const World = GetWorld();
 			if (World != NULL)
 			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), ShootSound, MuzzleLocation, 1.0f, 1.0f, 0.5);
 				const FRotator SpawnRotation = GetControlRotation();
 				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 				const FVector SpawnLocation(MuzzleLocation);// = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
@@ -107,7 +109,13 @@ void AKidPlayer::Sprint()
 		GetCharacterMovement()->MaxWalkSpeed = 1200;
 	else
 		GetCharacterMovement()->MaxWalkSpeed = 600;
+}
 
+void AKidPlayer::RecieveDamage(float Damage)
+{
+	Health -= Damage;
+	if(HurtSound)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), HurtSound, GetActorLocation());
 }
 
 void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

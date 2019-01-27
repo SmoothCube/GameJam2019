@@ -84,7 +84,7 @@ void ADogEnemy::DealDamage()
 	{
 		if (Player)
 		{
-			Player->Health--;
+			Player->RecieveDamage(1);
 			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] DealDamage: AUUUU"));
 			if (Player->Health <= 0)
 			{
@@ -123,6 +123,10 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 				if (DeathParticle)
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathParticle, GetActorLocation(), GetActorRotation());
+				}
+				if (Player)
+				{
+					Player->Kills++;
 				}
 				Destroy();
 				bFirstDeath = false;

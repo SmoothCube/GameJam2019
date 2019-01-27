@@ -18,7 +18,7 @@ public:
 	AKidPlayer();
 
 	UPROPERTY(VisibleAnywhere)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class USkeletalMeshComponent * Arm;
@@ -42,6 +42,7 @@ public:
 	void OnFire();
 	void Sprint();
 
+	UPROPERTY(BlueprintReadWrite)
 	int Health = 3;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -56,7 +57,16 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* ShootSound = nullptr;
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* HurtSound = nullptr;
+
+	void RecieveDamage(float Damage);
+
+	UPROPERTY(BlueprintReadWrite)
+	int Kills;
 
 private:
 	bool bIsSprinting = false;
