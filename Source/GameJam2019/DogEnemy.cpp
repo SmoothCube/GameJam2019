@@ -118,7 +118,10 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 				UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
 
 				SpawnBloodParticle(OtherActor->GetActorLocation());
-
+				if (HurtSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(GetWorld(), HurtSound, GetActorLocation());
+				}
 				Health -= 1;
 				UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: HEALTH %i !"), Health);
 				if (Health <= 0 && bFirstDeath)

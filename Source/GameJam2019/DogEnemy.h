@@ -84,13 +84,16 @@ public:
 		float CloseEnoughToPlayer = 100.f;
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void SpawnBloodParticle(FVector Location);
+	void SpawnBloodParticle(FVector Location);
 
 	UPROPERTY(BlueprintReadWrite)
 		bool bAttack = false;
 
 	UPROPERTY(BlueprintReadWrite)
 		bool bCanWalk = false;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* HurtSound = nullptr;
 
 private:
 
