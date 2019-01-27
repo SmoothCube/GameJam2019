@@ -103,5 +103,5 @@ private:
 	bool bIsFighting = true;
 	bool bFirstDeath = true;
 	bool bCanSeePlayer = false;
-	int Health = 100;
+	int Health = 25;
 };

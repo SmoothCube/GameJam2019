@@ -55,7 +55,7 @@ void ADogEnemy::Tick(float DeltaTime)
 		LastPlayerLocation = Player->GetActorLocation();
 		if (bCanWalk) {
 
-		EC->MoveToLocation(LastPlayerLocation, CloseEnoughToPlayer, true, true);
+			EC->MoveToLocation(LastPlayerLocation, CloseEnoughToPlayer, true, true);
 		}
 	}
 }
@@ -109,28 +109,33 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 {
 	if (bIsFighting)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
-		if (Cast<AProjectile>(OtherActor))
+		if (bCanWalk)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
 
-			SpawnBloodParticle(OtherActor->GetActorLocation());
-
-			Health -= 10;
-			if (Health <= 0 && bFirstDeath)
+			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Overlapping!"));
+			if (Cast<AProjectile>(OtherActor))
 			{
-				FTransform SpawnTransform = FTransform(FRotator(0, 0, 0), GetActorLocation() + FVector(0, 0, -50), FVector(1, 1, 1));
-				if (DeathParticle)
+				UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: Prjectile!"));
+
+				SpawnBloodParticle(OtherActor->GetActorLocation());
+
+				Health -= 1;
+				UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlap: HEALTH %i !"), Health);
+				if (Health <= 0 && bFirstDeath)
 				{
-					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathParticle, GetActorLocation(), GetActorRotation());
+					FTransform SpawnTransform = FTransform(FRotator(0, 0, 0), GetActorLocation() + FVector(0, 0, -50), FVector(1, 1, 1));
+					if (DeathParticle)
+					{
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathParticle, GetActorLocation(), GetActorRotation());
+					}
+					if (Player)
+					{
+						Player->Kills++;
+					}
+					Destroy();
+					bFirstDeath = false;
+					bIsFighting = false;
 				}
-				if (Player)
-				{
-					Player->Kills++;
-				}
-				Destroy();
-				bFirstDeath = false;
-				bIsFighting = false;
 			}
 		}
 	}
