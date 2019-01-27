@@ -124,6 +124,10 @@ void ADogEnemy::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor *
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathParticle, GetActorLocation(), GetActorRotation());
 				}
+				if (Player)
+				{
+					Player->Kills++;
+				}
 				Destroy();
 				bFirstDeath = false;
 				bIsFighting = false;
