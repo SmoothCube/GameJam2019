@@ -50,6 +50,8 @@ public:
 	bool bGunPickedUp = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool bFired = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool bCinematicDone = false;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);

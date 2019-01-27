@@ -77,7 +77,7 @@ void AKidPlayer::MoveRight(float Value)
 void AKidPlayer::OnFire()
 {
 	bFired = true;
-	if (bGunPickedUp)
+	if (bGunPickedUp && bCinematicDone)
 	{
 		// try and fire a projectile
 		if (ProjectileClass != NULL)
