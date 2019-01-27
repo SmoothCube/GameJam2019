@@ -76,7 +76,7 @@ public:
 		void ChangeMesh();
 
 	UPROPERTY(EditAnywhere)
-		float LookForPlayerRadius = 5000.f;
+		float LookForPlayerRadius = 1000.f;
 
 	UPROPERTY(EditAnywhere)
 		float CloseEnoughToPlayer = 100.f;

@@ -135,6 +135,9 @@ void ADogEnemy::BeginTraceOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 		{
 			bFirstTimeSeePlayer = false;
 			ChangeMesh();
+			LookForPlayerRadius = 6000.f;
+			LookForPlayerComponent->SetSphereRadius(LookForPlayerRadius);
+
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginTraceOverlap: Found Player!"));
