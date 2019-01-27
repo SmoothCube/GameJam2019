@@ -109,13 +109,13 @@ void AKidPlayer::Sprint()
 		GetCharacterMovement()->MaxWalkSpeed = 1200;
 	else
 		GetCharacterMovement()->MaxWalkSpeed = 600;
-
 }
 
 void AKidPlayer::RecieveDamage(float Damage)
 {
 	Health -= Damage;
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HurtSound, GetActorLocation());
+	if(HurtSound)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), HurtSound, GetActorLocation());
 }
 
 void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
