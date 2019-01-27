@@ -76,17 +76,12 @@ void AKidPlayer::MoveRight(float Value)
 
 void AKidPlayer::OnFire()
 {
-
+	bFired = true;
 	if (bGunPickedUp)
 	{
-
 		// try and fire a projectile
 		if (ProjectileClass != NULL)
 		{
-			if(ShootAnim)
-			{
-				Arm->PlayAnimation(ShootAnim, false);
-			}
 			UWorld* const World = GetWorld();
 			if (World != NULL)
 			{
@@ -100,11 +95,9 @@ void AKidPlayer::OnFire()
 
 				// spawn the projectile at the muzzle
 				World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
 			}
 		}
 	}
-
 }
 
 void AKidPlayer::Sprint()
@@ -123,10 +116,8 @@ void AKidPlayer::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor 
 	if (bGunPickedUp == false && OtherActor->IsA(ATreestump::StaticClass()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[AKidPlayer] BeginOverlap: Found treestub"))
-		Arm->SetVisibility(true,true);
-		Arm->Activate();
-		Arm->PlayAnimation(FirstShootAnim, false);
 		bGunPickedUp = true;
+		Arm->SetVisibility(true,false);
 	}
 }
 

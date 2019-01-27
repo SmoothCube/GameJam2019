@@ -45,6 +45,13 @@ public:
 	int Health = 3;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bUsingStickGun = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool bGunPickedUp = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool bFired = false;
+
+	UPROPERTY(BlueprintReadWrite)
 	FVector MuzzleLocation = FVector(0, 0, 0);
 
 	UPROPERTY(BlueprintReadWrite)
@@ -55,12 +62,9 @@ private:
 	bool bIsSprinting = false;
 	bool bFirstShot = false;
 
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
-	UPROPERTY(EditAnywhere)
-	UAnimationAsset* ShootAnim = nullptr;
-	UPROPERTY(EditAnywhere)
-	UAnimationAsset* FirstShootAnim = nullptr;
 
 	UFUNCTION()
 		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
