@@ -38,6 +38,7 @@ void ADogEnemy::BeginPlay()
 	LookForPlayerComponent->OnComponentEndOverlap.AddDynamic(this, &ADogEnemy::EndTraceOverlap);
 
 	AttackPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADogEnemy::BeginOverlapAttack);
+	AttackPlayerComponent->OnComponentEndOverlap.AddDynamic(this, &ADogEnemy::EndOverlapAttack);
 
 
 	HomeLocation = GetActorLocation();
@@ -75,12 +76,24 @@ void ADogEnemy::BeginOverlapAttack(UPrimitiveComponent * OverlappedComponent, AA
 		{
 			UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] BeginOverlapAttack: Found Player!"));
 			bAttack = true;
+			bIsPlayerInRange = true;
 		}
 	}
 }
+void ADogEnemy::EndOverlapAttack(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] EndOverlapAttack: Overlapping!"));
+	Player = Cast<AKidPlayer>(OtherActor);
+
+	if (Player) {
+		UE_LOG(LogTemp, Warning, TEXT("[DogEnemy] EndOverlapAttack: Lost Player!"));
+		bIsPlayerInRange = false;
+	}
+}
+
 void ADogEnemy::DealDamage()
 {
-	if (bAttack)
+	if (bAttack && bIsPlayerInRange)
 	{
 		if (Player)
 		{
